@@ -1,6 +1,7 @@
 {
-  "name": "regex-viz",
-  "packageManager": "yarn@4.1.1",
+  "name": "@halfmatthalfcat/regex-viz",
+  "description": "Visualize multiple, concurrent regex expressions on a given text",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite"
