@@ -1,0 +1,30 @@
+html,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+
+  height: 100%;
+  width: 100%;
+}
+
+#app {
+  display: grid;
+  grid-auto-rows: min-content minmax(0, 1fr) min-content;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+.data-container {
+  display: grid;
+  grid-auto-rows: min-content minmax(0, 1fr) min-content;
+}
+
+.data-view-container {
+  overflow-y: auto;
+}
