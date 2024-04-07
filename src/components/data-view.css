@@ -1,3 +1,6 @@
 .data-view {
   font-family: "Inconsolata Variable", monospace;
+
+  display: flex;
+  flex-flow: row wrap;
 }

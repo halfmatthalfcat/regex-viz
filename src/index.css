@@ -28,3 +28,7 @@ body,
 .data-view-container {
   overflow-y: auto;
 }
+
+.no-padding {
+  padding: 0 !important;
+}

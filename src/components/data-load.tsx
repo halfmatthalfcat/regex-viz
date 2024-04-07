@@ -22,7 +22,6 @@ export const DataLoad: FC = () => {
   return (
     <Modal
       open={open}
-      onOpen={console.log}
       trigger={
         <MenuItem
           position="right"

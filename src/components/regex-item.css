@@ -1,0 +1,12 @@
+.regex-item {
+  padding: 1rem;
+}
+
+.regex-color input {
+  height: 38px;
+  border-radius: 3px;
+}
+
+.regex-item-textarea textarea {
+  font-family: "Inconsolata Variable", monospace;
+}

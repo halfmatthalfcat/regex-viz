@@ -5,6 +5,8 @@ import "@fontsource-variable/inconsolata";
 import "semantic-ui-css/semantic.min.css";
 import { DataLoad } from "./components/data-load";
 import { DataView } from "./components/data-view";
+import { RegexList } from "./components/regex-list";
+import { RegexNew } from "./components/regex-new";
 import { DataContextProvider } from "./context/data-context";
 import "./index.css";
 
@@ -40,10 +42,14 @@ export function App() {
         </div>
         <div className="data-container">
           <Menu attached="top">
-            <MenuItem header>Regex</MenuItem>
+            <MenuItem header>Regexes</MenuItem>
           </Menu>
-          <Segment attached></Segment>
-          <Segment attached="bottom"></Segment>
+          <Segment attached className="no-padding data-view-container">
+            <RegexList />
+          </Segment>
+          <Menu attached="bottom">
+            <RegexNew />
+          </Menu>
         </div>
       </Segment>
       <Menu attached="bottom" borderless>

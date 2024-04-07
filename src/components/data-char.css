@@ -1,0 +1,13 @@
+.data-char {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.data-char-lines {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.data-char-line {
+  height: 2px;
+}
