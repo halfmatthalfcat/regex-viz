@@ -60,7 +60,6 @@ export const DataContextProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [currentState]);
 
   useDeepCompareEffect(() => {
-    console.log("comparing");
     const matches = Object.values(currentState.regexs).reduce((acc, regex) => {
       try {
         const r = new RegExp(regex.pattern, "g");
@@ -93,7 +92,7 @@ export const DataContextProvider: FC<PropsWithChildren> = ({ children }) => {
           acc
         );
       } catch {
-        return {};
+        return acc;
       }
     }, {} as { [idx: number]: Array<Regex> });
     setCurrentState((curr) => ({
