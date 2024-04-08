@@ -57,7 +57,12 @@ export function App() {
           A little utility to visualize multiple regex patterns across a given
           text
         </MenuItem>
-        <MenuItem position="right">Created by halfmatthalfcat</MenuItem>
+        <MenuItem position="right">
+          <span>Created by</span>
+          <a style={{ marginLeft: 3 }} href="https://halfmatthalfcat.com">
+            halfmatthalfcat
+          </a>
+        </MenuItem>
       </Menu>
     </DataContextProvider>
   );
