@@ -1,22 +1,39 @@
-import { FC } from "preact/compat";
-import { useCallback } from "react";
-import { Divider } from "semantic-ui-react";
+import { FC, useCallback, useState } from "preact/compat";
+import { Accordion } from "semantic-ui-react";
 import { useDataContext } from "../context/data-context";
-import { RegexItem } from "./regex-item";
 
+import { RegexItem } from "./regex-item";
 import "./regex-list.css";
+import { RegexTitle } from "./regex-title";
 
 export const RegexList: FC = () => {
   const { regexs } = useDataContext();
+  const [activeIdx, setActiveIdx] = useState(-1);
+
+  const setIdx = useCallback(
+    (idx: number) => {
+      if (idx === activeIdx) {
+        setActiveIdx(-1);
+      } else {
+        setActiveIdx(idx);
+      }
+    },
+    [activeIdx]
+  );
 
   const items = useCallback(() => {
-    const _items = Object.keys(regexs).flatMap((id) => [
-      <RegexItem id={id} />,
-      <Divider />,
+    const _items = Object.keys(regexs).flatMap((id, i) => [
+      <RegexTitle
+        id={id}
+        idx={i}
+        active={activeIdx === i}
+        setActive={setIdx}
+      />,
+      <RegexItem id={id} active={activeIdx === i} />,
     ]);
 
     return _items;
-  }, [regexs]);
+  }, [regexs, activeIdx]);
 
-  return <div className="regex-list">{items()}</div>;
+  return <Accordion>{items()}</Accordion>;
 };

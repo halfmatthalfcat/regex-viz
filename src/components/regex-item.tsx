@@ -1,10 +1,10 @@
 import { FC, useEffect, useState } from "preact/compat";
 import {
+  AccordionContent,
   Form,
   FormField,
   FormGroup,
   FormInput,
-  Item,
   TextArea,
 } from "semantic-ui-react";
 import { useDataContext } from "../context/data-context";
@@ -22,8 +22,9 @@ const regexIsValid = (pattern: string, flags?: string): boolean => {
 
 interface Props {
   id: string;
+  active: boolean;
 }
-export const RegexItem: FC<Props> = ({ id }) => {
+export const RegexItem: FC<Props> = ({ id, active }) => {
   const { regexs, setState } = useDataContext();
   const [regex, setRegex] = useState(regexs[id]);
   const [isValid, setIsValid] = useState(
@@ -39,7 +40,7 @@ export const RegexItem: FC<Props> = ({ id }) => {
   }, [regex]);
 
   return (
-    <Item className="regex-item">
+    <AccordionContent active={active} className="regex-item">
       <Form>
         <FormGroup>
           <FormInput
@@ -96,6 +97,6 @@ export const RegexItem: FC<Props> = ({ id }) => {
           }
         />
       </Form>
-    </Item>
+    </AccordionContent>
   );
 };
