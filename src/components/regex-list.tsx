@@ -1,13 +1,13 @@
 import { FC, useCallback, useState } from "preact/compat";
 import { Accordion } from "semantic-ui-react";
-import { useDataContext } from "../context/data-context";
 
+import { useCurrentWorkspace } from "../context/workspaces-context";
 import { RegexItem } from "./regex-item";
 import "./regex-list.css";
 import { RegexTitle } from "./regex-title";
 
 export const RegexList: FC = () => {
-  const { regexs } = useDataContext();
+  const workspace = useCurrentWorkspace();
   const [activeIdx, setActiveIdx] = useState(-1);
 
   const setIdx = useCallback(
@@ -22,18 +22,23 @@ export const RegexList: FC = () => {
   );
 
   const items = useCallback(() => {
-    const _items = Object.keys(regexs).flatMap((id, i) => [
-      <RegexTitle
-        id={id}
-        idx={i}
-        active={activeIdx === i}
-        setActive={setIdx}
-      />,
-      <RegexItem id={id} active={activeIdx === i} />,
-    ]);
-
-    return _items;
-  }, [regexs, activeIdx]);
+    if (workspace) {
+      return workspace.regexes
+        .toIndexedSeq()
+        .flatMap((regex, i) => [
+          <RegexTitle
+            regex={regex}
+            idx={i}
+            active={activeIdx === i}
+            setActive={setIdx}
+          />,
+          <RegexItem regex={regex} active={activeIdx === i} />,
+        ])
+        .toJS();
+    } else {
+      return [];
+    }
+  }, [workspace, activeIdx]);
 
   return <Accordion>{items()}</Accordion>;
 };

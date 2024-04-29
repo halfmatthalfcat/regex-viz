@@ -1,4 +1,10 @@
-import { FC, useEffect, useState } from "preact/compat";
+import {
+  FC,
+  TargetedEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "preact/compat";
 import {
   AccordionContent,
   Form,
@@ -7,8 +13,11 @@ import {
   FormInput,
   TextArea,
 } from "semantic-ui-react";
-import { useDataContext } from "../context/data-context";
-
+import { Regex } from "../context/types";
+import {
+  useCurrentWorkspace,
+  useWorkspaces,
+} from "../context/workspaces-context";
 import "./regex-item.css";
 
 const regexIsValid = (pattern: string, flags?: string): boolean => {
@@ -21,23 +30,59 @@ const regexIsValid = (pattern: string, flags?: string): boolean => {
 };
 
 interface Props {
-  id: string;
+  regex: Regex;
   active: boolean;
 }
-export const RegexItem: FC<Props> = ({ id, active }) => {
-  const { regexs, setState } = useDataContext();
-  const [regex, setRegex] = useState(regexs[id]);
-  const [isValid, setIsValid] = useState(
-    regex ? regexIsValid(regex.pattern, "g") : false
+export const RegexItem: FC<Props> = ({ regex, active }) => {
+  const { updateWorkspace } = useWorkspaces();
+  const workspace = useCurrentWorkspace();
+  const [isValid, setIsValid] = useState(regexIsValid(regex.pattern, "g"));
+
+  useEffect(() => {
+    setIsValid(regexIsValid(regex.pattern, "g"));
+  }, [regex]);
+
+  const onLabelChange = useCallback(
+    ({ currentTarget: { value } }: TargetedEvent<HTMLInputElement>) => {
+      if (workspace && regex) {
+        updateWorkspace(workspace.id, {
+          regexes: workspace.regexes.update(regex.id, (regex) => ({
+            ...regex!,
+            name: value,
+          })),
+        });
+      }
+    },
+    [workspace, regex, updateWorkspace]
   );
 
-  useEffect(() => {
-    setRegex(regexs[id]);
-  }, [regexs[id]]);
+  const onRegexChange = useCallback(
+    ({ currentTarget: { value } }: TargetedEvent<HTMLInputElement>) => {
+      if (workspace && regex) {
+        updateWorkspace(workspace.id, {
+          regexes: workspace.regexes.update(regex.id, (regex) => ({
+            ...regex!,
+            pattern: value,
+          })),
+        });
+      }
+    },
+    [workspace, regex, updateWorkspace]
+  );
 
-  useEffect(() => {
-    setIsValid(regex ? regexIsValid(regex.pattern, "g") : false);
-  }, [regex]);
+  const onColorChange = useCallback(
+    ({ currentTarget: { value } }: TargetedEvent<HTMLInputElement>) => {
+      if (value && workspace && regex) {
+        updateWorkspace(workspace.id, {
+          regexes: workspace.regexes.update(regex.id, (regex) => ({
+            ...regex!,
+            color: value,
+          })),
+        });
+      }
+    },
+    [workspace, regex, updateWorkspace]
+  );
 
   return (
     <AccordionContent active={active} className="regex-item">
@@ -47,15 +92,7 @@ export const RegexItem: FC<Props> = ({ id, active }) => {
             label="Label"
             width={14}
             defaultValue={regex?.name ?? ""}
-            onChange={({ currentTarget: { value } }) =>
-              setState({
-                regexs: {
-                  [id]: {
-                    name: value,
-                  },
-                },
-              })
-            }
+            onChange={onLabelChange}
           />
           <FormInput
             className="regex-color"
@@ -63,15 +100,7 @@ export const RegexItem: FC<Props> = ({ id, active }) => {
             type="color"
             defaultValue={regex?.color ?? void 0}
             width={2}
-            onChange={({ currentTarget: { value } }) =>
-              setState({
-                regexs: {
-                  [id]: {
-                    color: value,
-                  },
-                },
-              })
-            }
+            onChange={onColorChange}
           />
         </FormGroup>
         <FormField
@@ -79,15 +108,7 @@ export const RegexItem: FC<Props> = ({ id, active }) => {
           control={TextArea}
           label="Regex"
           defaultValue={regex?.pattern ?? ""}
-          onChange={({ currentTarget: { value } }) =>
-            setState({
-              regexs: {
-                [id]: {
-                  pattern: value,
-                },
-              },
-            })
-          }
+          onChange={onRegexChange}
           error={
             !isValid
               ? {

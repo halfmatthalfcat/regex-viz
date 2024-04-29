@@ -13,6 +13,7 @@
     "@types/react-highlight-words": "^0",
     "deep-diff": "^1.0.2",
     "deepmerge": "^4.3.1",
+    "immutable": "^5.0.0-beta.5",
     "nanoid": "^5.0.6",
     "preact": "^10.20.1",
     "react-highlight-words": "^0.20.0",
@@ -20,7 +21,7 @@
     "semantic-ui-react": "^2.1.5",
     "type-fest": "^4.15.0",
     "typescript": "^5.4.4",
-    "use-deep-compare-effect": "^1.8.1",
+    "use-custom-compare-effect": "^0.0.5",
     "vite": "^5.2.8"
   }
 }

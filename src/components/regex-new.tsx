@@ -1,28 +1,33 @@
 import { nanoid } from "nanoid";
-import { FC, useCallback } from "preact/compat";
+import { FC } from "preact/compat";
+import { useCallback } from "react";
 import { MenuItem } from "semantic-ui-react";
-import { useDataContext } from "../context/data-context";
+import {
+  useCurrentWorkspace,
+  useWorkspaces,
+} from "../context/workspaces-context";
 
 export const RegexNew: FC = () => {
-  const { regexs, setState } = useDataContext();
+  const { updateWorkspace } = useWorkspaces();
+  const workspace = useCurrentWorkspace();
+
   const onClick = useCallback(() => {
-    const idx = Object.keys(regexs).length + 1;
-    const id = nanoid();
-    setState({
-      regexs: {
-        [id]: {
+    if (workspace) {
+      const id = nanoid();
+      updateWorkspace(workspace.id, {
+        regexes: workspace.regexes.set(id, {
           id,
-          name: `Pattern ${idx}`,
+          name: `Pattern ${workspace.regexes.size + 1}`,
           pattern: "",
           color:
             "#" +
             Math.floor(Math.random() * 16777215)
               .toString(16)
               .padStart(6, "0"),
-        },
-      },
-    });
-  }, [regexs]);
+        }),
+      });
+    }
+  }, [workspace, updateWorkspace]);
 
   return (
     <MenuItem primary={true} onClick={onClick} position="right">

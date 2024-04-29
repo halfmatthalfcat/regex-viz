@@ -1,4 +1,5 @@
-import { FC, useState } from "preact/compat";
+import { FC, useCallback, useState } from "preact/compat";
+import { } from "react";
 import {
   Button,
   Form,
@@ -9,24 +10,35 @@ import {
   ModalHeader,
   TextArea,
 } from "semantic-ui-react";
-import { useDataContext } from "../context/data-context";
+import { useModals } from "../context/modal-context";
+import {
+  useCurrentWorkspace,
+  useWorkspaces,
+} from "../context/workspaces-context";
 
 export const DataLoad: FC = () => {
-  const {
-    setState,
-    data,
-    modal: { data: open },
-  } = useDataContext();
-  const [text, setText] = useState(data);
+  const { data: dataOpen, toggleModal } = useModals();
+
+  const { updateWorkspace } = useWorkspaces();
+  const workspace = useCurrentWorkspace();
+
+  const [text, setText] = useState(workspace?.text ?? "");
+
+  const onSave = useCallback(() => {
+    if (workspace) {
+      updateWorkspace(workspace.id, {
+        text,
+      });
+
+      toggleModal("data");
+    }
+  }, [workspace, updateWorkspace, text]);
 
   return (
     <Modal
-      open={open}
+      open={dataOpen}
       trigger={
-        <MenuItem
-          position="right"
-          onClick={() => setState({ modal: { data: true } })}
-        >
+        <MenuItem position="right" onClick={() => toggleModal("data")}>
           Load
         </MenuItem>
       }
@@ -42,17 +54,7 @@ export const DataLoad: FC = () => {
         </Form>
       </ModalContent>
       <ModalActions>
-        <Button
-          primary
-          onClick={() =>
-            setState({
-              data: text,
-              modal: {
-                data: false,
-              },
-            })
-          }
-        >
+        <Button primary onClick={onSave}>
           Save
         </Button>
       </ModalActions>

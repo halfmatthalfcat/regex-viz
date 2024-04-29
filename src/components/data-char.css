@@ -9,5 +9,10 @@
 }
 
 .data-char-line {
-  height: 2px;
+  cursor: pointer;
+  height: 3px;
+}
+
+.data-char-line:hover {
+  transform: translateY(-1px);
 }
